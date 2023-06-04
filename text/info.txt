@@ -1,0 +1,47 @@
+PROBLEMA I
+
+Acessar atributos de MotionObject (position, velocity, acceleration) em métodos de classes Behaviour.
+Os atributos precisam ser acessados múltiplas vezes.
+
+O que é mais eficaz ??
+
+1. Armazenar atributos do MotionObject uma única vez em variáveis private da classe Behaviour. Acessar as variáveis private todas as vezes que forem necessárias.
+
+2. Acessar as variáveis todas as vezes que forem necessárias a partir de Getters e Setters de MotionObject.
+
+
+PROBLEMA II
+
+Modularizar a função update em classes Behaviours de modo a reutilizar o código nas classes filhas : Accelered e Resistance
+
+PROBLEMA III
+
+Critério de parada das naves aceleradas não é bom. Pensar em um novo critério e alterar o assertion.
+EX:
+  Inicializo uma nave com: Vx = 0.0f, Ax = 2.0f e stop_speed = 1.5f
+  O espaço do módulo de velocidades em x é: 0, 2, 4, 6... 
+
+  O critério de parada é irrelevante nessa configuração e o jogador só conseguirar parar a nave caso acerte exataemente o momento de soltar os botões.
+  Busco um critério que permita a parada em um range de velocidades.
+
+  Ideia: se a velocidade é nula, dê um boost na nave suficiente para passar stop_speed.
+
+
+Embedded Images:
+  Conversão de arquivos de imagem (.png, .jpg) em source code que pode sem compilado e usado durante o jogo.
+  Vantagem evidente é que não é necessário ler o arquivo de imagem at run time.
+
+PROBLEMA IV 
+  Não se pode carregar textura em construtores?
+
+
+O tratamento de colisões considera que cada objeto cinemático é um retângulo com dimensões dados por _object_dimension
+e centro na posição do objeto
+
+devemos considerar utiliza um set de behaviours como variavel glaobal a fim de facilitar a liberação de memória??
+
+
+Tempo de carregamento
+  estamos usando 10 frames, trocar para função de tempo raylib (lucca)
+  
+  

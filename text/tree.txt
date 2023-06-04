@@ -1,0 +1,76 @@
+.
+├── LICENCE
+├── Makefile
+├── README.md
+├── build
+├── images
+│   ├── bullet.png
+│   ├── space.png
+│   ├── spaceship_red.png
+│   └── spaceship_yellow.png
+├── include
+│   ├── Alien.hpp
+│   ├── Behaviour.hpp
+│   ├── Colors.hpp
+│   ├── Game.hpp
+│   ├── MotionObject.hpp
+│   ├── Settings.hpp
+│   └── Ship.hpp
+├── lib
+│   ├── Windows
+│   │   └── libraylib.a
+│   └── macOS
+│       └── libraylib.a
+├── src
+│   ├── Alien.cpp
+│   ├── Behaviour.cpp
+│   ├── Game.cpp
+│   ├── MotionObject.cpp
+│   ├── Ship.cpp
+│   └── main.cpp
+├── text
+│   ├── info.txt
+│   └── tree.txt
+└── thirdy_party
+    ├── AudioDevice.hpp
+    ├── AudioStream.hpp
+    ├── BoundingBox.hpp
+    ├── Camera2D.hpp
+    ├── Camera3D.hpp
+    ├── Color.hpp
+    ├── Font.hpp
+    ├── Functions.hpp
+    ├── Gamepad.hpp
+    ├── Image.hpp
+    ├── Material.hpp
+    ├── Matrix.hpp
+    ├── Mesh.hpp
+    ├── Model.hpp
+    ├── ModelAnimation.hpp
+    ├── Mouse.hpp
+    ├── Music.hpp
+    ├── Physics.hpp
+    ├── Ray.hpp
+    ├── RayCollision.hpp
+    ├── RaylibException.hpp
+    ├── Rectangle.hpp
+    ├── RenderTexture.hpp
+    ├── Shader.hpp
+    ├── Sound.hpp
+    ├── Text.hpp
+    ├── Texture.hpp
+    ├── Vector2.hpp
+    ├── Vector3.hpp
+    ├── Vector4.hpp
+    ├── VrStereoConfig.hpp
+    ├── Wave.hpp
+    ├── Window.hpp
+    ├── physac.hpp
+    ├── raylib-cpp-utils.hpp
+    ├── raylib-cpp.hpp
+    ├── raylib.h
+    ├── raylib.hpp
+    ├── raymath.h
+    └── raymath.hpp
+
+10 directories, 64 files
