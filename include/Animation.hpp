@@ -12,12 +12,30 @@ class MotionObject;
 class Animation {
     public:
         Animation();
-        Animation(Texture2D* texture, Vector2 tx_frames_dim, float frame_timer);
-
+        Animation(Texture2D* texture);
         ~Animation();
 
-        void draw(MotionObject* motion_object);
-        void update(float delta_timer);
+        void virtual draw(MotionObject* motion_object);
+        void virtual update(float delta_time); // interface
+    
+    protected:
+        // Textura
+        Texture2D* _texture;
+
+        // Dimensões da textura em pixels
+        float _width;
+        float _height;
+};
+
+class AnimationFPS : public Animation {
+    public:
+        AnimationFPS();
+        AnimationFPS(Texture2D* texture, Vector2 tx_frames_dim, float frame_timer);
+
+        ~AnimationFPS();
+
+        void draw(MotionObject* motion_object) override;
+        void update(float delta_time) override;
 
     private:
         // Altera o frame a ser desenhado
@@ -25,13 +43,6 @@ class Animation {
 
         // Adiciona tempo no relógio
         void _update_clock(float delta_time);
-
-        // Textura
-        Texture2D* _texture;
-
-        // Dimensões da textura em pixels
-        float _width;
-        float _height;
 
         // Número total de frames na textura
         float _num_frames;

@@ -4,10 +4,35 @@ Animation::Animation() {
 
 }
 
-Animation::Animation(Texture2D* texture, Vector2 tx_frame_dim, float frame_timer) {
+Animation::Animation(Texture2D* texture) {
     _texture = texture;
-    _width = _texture->width;
-    _height = _texture->height;
+    _width = texture->width;
+    _height = texture->height;
+}
+
+Animation::~Animation() {
+
+}
+
+
+void Animation::draw(MotionObject* motion_object) {
+    Vector2 position = motion_object->get("position");
+    Vector2 dimension = motion_object->get("dimension");
+    
+    DrawTexturePro(*_texture, (Rectangle) {0, 0, _width, _height},
+    (Rectangle) {position.x, position.y, dimension.x, dimension.y},
+    Vector2 {dimension.x/2, dimension.y/2}, 0, WHITE);
+}
+
+void Animation::update(float delta_time) {
+
+}
+
+AnimationFPS::AnimationFPS() : Animation() {
+
+}
+
+AnimationFPS::AnimationFPS(Texture2D* texture, Vector2 tx_frame_dim, float frame_timer) : Animation(texture) {
     _num_frames = tx_frame_dim.x + tx_frame_dim.y;
     _tx_frame_dim = tx_frame_dim;
     _clock = 0.0f;
@@ -15,23 +40,23 @@ Animation::Animation(Texture2D* texture, Vector2 tx_frame_dim, float frame_timer
     _frame = 0;
 }
 
-Animation::~Animation() {
+AnimationFPS::~AnimationFPS() {
 
 }
 
-void Animation::update(float delta_timer) {
-    _clock += delta_timer;
+void AnimationFPS::update(float delta_time) {
+    _clock += delta_time;
     _update_frame();
 }
 
-void Animation::_update_frame() {
+void AnimationFPS::_update_frame() {
     if (_clock >= _frame_timer) {
         _frame = _frame == _num_frames - 1 ? 0 : _frame+1;
         _clock = 0.0f;
     }
 }
 
-void Animation::draw(MotionObject* motion_object) {
+void AnimationFPS::draw(MotionObject* motion_object) {
     Vector2 position = motion_object->get("position");
     Vector2 dimension = motion_object->get("dimension");
 

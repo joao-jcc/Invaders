@@ -82,16 +82,17 @@ void inline Game::_build_objects() {
     Vector2 position = {SCREEN_WIDTH/2.0f, SCREEN_HEIGHT/2.0f}; // centro da tela
     Vector2 velocity = {0.0f, 0.0f};
     Vector2 acceleration = {0.0f, 0.0f};
-    Vector2 dimension = {50.0f, 50.0f};
+    Vector2 dimension = {50.0f, 80.0f};
 
     _motion_object = new MotionObject(position, velocity, acceleration, dimension);
-    _motion_object->add_behaviour(_behaviours.at("default"));
+    _motion_object->add_behaviour(_behaviours.at("follow-mouse"));
     _motion_object->add_animation(_animation);
 }
 
 void inline Game::_load_animations() {
     // Animação do jogo
-    _animation = new Animation(&_textures.at("explosion"), Vector2 {5, 1}, 0.1f);
+    _animation = new AnimationFPS(&_textures.at("ship"), Vector2 {5, 2}, 0.1f);
+    // _animation = new Animation(&_textures.at("bullet"));
 }
 
 void inline Game::_load_behaviours() {
