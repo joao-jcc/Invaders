@@ -4,29 +4,38 @@
 ├── README.md
 ├── build
 ├── images
+│   ├── alexandria
+│   │   ├── alien_bulllet_exp.png
+│   │   ├── alien_exp.png
+│   │   ├── background_exp.png
+│   │   ├── bullet_exp.png
+│   │   └── ship_exp.png
+│   ├── auxiliar
+│   │   └── game.jpg
 │   ├── bullet.png
+│   ├── explosion.png
+│   ├── power-up.png
+│   ├── ship.png
 │   ├── space.png
 │   ├── spaceship_red.png
 │   └── spaceship_yellow.png
 ├── include
-│   ├── Alien.hpp
+│   ├── Animation.hpp
 │   ├── Behaviour.hpp
 │   ├── Colors.hpp
 │   ├── Game.hpp
 │   ├── MotionObject.hpp
-│   ├── Settings.hpp
-│   └── Ship.hpp
+│   └── Settings.hpp
 ├── lib
 │   ├── Windows
 │   │   └── libraylib.a
 │   └── macOS
 │       └── libraylib.a
 ├── src
-│   ├── Alien.cpp
+│   ├── Animation.cpp
 │   ├── Behaviour.cpp
 │   ├── Game.cpp
 │   ├── MotionObject.cpp
-│   ├── Ship.cpp
 │   └── main.cpp
 ├── text
 │   ├── info.txt
@@ -73,4 +82,4 @@
     ├── raymath.h
     └── raymath.hpp
 
-10 directories, 64 files
+12 directories, 71 files

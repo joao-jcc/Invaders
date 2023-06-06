@@ -12,7 +12,7 @@
 #include "Settings.hpp"
 #include "Animation.hpp"
 
-
+class Behaviour;
 class Animation;
 
 class Game {
@@ -28,7 +28,7 @@ class Game {
 
         // Fecha jogo
         void shutdown();
-    
+
     private:
         // Recebe entradas do usuário (teclado e mouse)
         void _process_input();
@@ -61,7 +61,7 @@ class Game {
         std::map<std::string, Behaviour*> _behaviours;
 
         // Animação do jogo
-        Animation* _animation;
+        std::map<std::string, Animation*> _animations;
 
         // Objetos do jogo
         MotionObject* _motion_object;

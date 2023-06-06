@@ -1,7 +1,10 @@
 #include "MotionObject.hpp"
 
+// Inicializando ponteiro para jogo como nulo
+Game* MotionObject::_game = nullptr;
+
 MotionObject::MotionObject() {
- 
+
 };
 
 MotionObject::MotionObject(Vector2 position, Vector2 velocity, Vector2 acceleration, Vector2 dimension) {
@@ -13,6 +16,8 @@ MotionObject::MotionObject(Vector2 position, Vector2 velocity, Vector2 accelerat
 
     // Animações do objeto
     _animations = std::vector<Animation*>();
+
+    std::cout << TERMINAL_BOLDRED << "Game Pointer: " << _game << TERMINAL_RESET << std::endl;
 
 };
 
@@ -45,6 +50,10 @@ void MotionObject::add_animation(Animation* animation) {
 
 void MotionObject::set(std::string key, Vector2 value) {
     _parameters.at(key) = value;
+}
+
+void MotionObject::set_game(Game* game) {
+    _game = game;
 }
 
 Vector2 MotionObject::get(std::string key) {

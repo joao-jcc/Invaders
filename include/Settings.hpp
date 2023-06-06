@@ -6,8 +6,8 @@
 #define SCREEN_TITLE "Invaders"
 #define FPS 60
 
-#define SHIP_TEXTURE "images/ship.png"
-#define ALIEN_TEXTURE "images/spaceship_yellow.png"
+#define SHIP_TEXTURE "images/alexandria/ship_exp.png"
+#define ALIEN_TEXTURE "images/alexandria/alien_exp.png"
 #define BACKGROUND_TEXTURE "images/space.png"
 #define BULLET_TEXTURE "images/bullet.png"
 #define EXPLOSION_TEXTURE "images/explosion.png"

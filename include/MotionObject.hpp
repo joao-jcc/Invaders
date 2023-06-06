@@ -7,10 +7,11 @@
 #include <map>
 #include <string>
 
+#include "Game.hpp"
 #include "Behaviour.hpp"
 #include "Animation.hpp"
 
-
+class Game;
 class Behaviour;
 class Animation;
 
@@ -37,12 +38,15 @@ class MotionObject {
         // Adiciona animação para modificar a função draw
         void add_animation(Animation* animation);
 
-        // Getters e Setters
+        // Getters e Setters para parâmtros de movimento e dimensão
         void set(std::string key, Vector2 value);
         Vector2 get(std::string key);
-    
+
+        // Setter para o ponteiro do jogo
+        void set_game(Game* game);
 
     protected:
+        static Game* _game;
         // Posição, Velocidade, Aceleração e Dimensão
         std::map<std::string, Vector2> _parameters;
 
