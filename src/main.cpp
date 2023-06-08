@@ -4,7 +4,7 @@
 
 int main() {
     
-    // Initialization
+    // Inicialização
     Game invaders;
 
     invaders.initialize();

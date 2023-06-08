@@ -7,7 +7,7 @@
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/iuricode/README-template?style=for-the-badge)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/iuricode/README-template?style=for-the-badge)
 
-<img src="images/aux/game.jpg" alt="Dois Kamikazes se aproximando da nave do jogador">
+<img src="images/auxiliar/game.jpg" alt="Dois Kamikazes se aproximando da nave do jogador">
 
 > Desenvolvimento de um jogo baseado no Invaders Clássico, utilizando-se a biblioteca gráfica Raylib.
 

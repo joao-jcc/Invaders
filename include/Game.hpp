@@ -5,15 +5,19 @@
 #include <map>
 #include <string>
 #include <iterator>
+#include <iostream>
 #include <list>
 
-#include "MotionObject.hpp"
 #include "Behaviour.hpp"
+#include "Colors.hpp"
 #include "Settings.hpp"
 #include "Animation.hpp"
+#include "MotionObject.hpp"
+#include "Ship.hpp"
 
-class Behaviour;
 class Animation;
+class Behaviour;
+
 
 class Game {
     public:
@@ -28,6 +32,16 @@ class Game {
 
         // Fecha jogo
         void shutdown();
+
+        // Adiciona bala
+        void add_bullet(MotionObject* bullet);
+
+        // Setter e Getters
+        Behaviour* get_behaviour(std::string key);
+        
+        Animation* get_animation(std::string key);
+
+        bool get_inputs(std::string key);
 
     private:
         // Recebe entradas do usuário (teclado e mouse)
@@ -51,7 +65,7 @@ class Game {
         // Unload graphics
         void inline _unload_graphics();
 
-        // Constrói objetos do joho
+        // Constroi objetos do joho
         void inline _build_objects();
 
         // Gráficos
@@ -64,8 +78,12 @@ class Game {
         std::map<std::string, Animation*> _animations;
 
         // Objetos do jogo
-        MotionObject* _motion_object;
-        
+        Ship* _ship;
+        std::list<MotionObject*> _bullets;
+
+        // Inputs
+        std::map<std::string, bool> _key_inputs;
+        Vector2 _mouse_position;
 };
 
 #endif

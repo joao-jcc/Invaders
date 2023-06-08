@@ -1,6 +1,9 @@
 #include "Game.hpp"
 
 Game::Game() {
+    // Inputs
+    _key_inputs = { {"move-right", false}, {"move-left", false}, {"fire", false}};
+    _mouse_position = Vector2 {};
    
     // Textures
     _textures = std::map<std::string, Texture2D>();
@@ -8,6 +11,9 @@ Game::Game() {
     _animations = std::map<std::string, Animation*>();
     // Comportamentos
     _behaviours = std::map<std::string, Behaviour*>();
+    // Objetos
+    _ship = nullptr;
+    _bullets = std::list<MotionObject*>();
 
     // Ponteiro para o jogo para as instâncias MotionObject;
     MotionObject motion_object;
@@ -17,7 +23,7 @@ Game::Game() {
 
 Game::~Game() {
     // Deleta toda a memória alocada no HEAP
-    delete _motion_object;
+    delete _ship;
 
     for (std::pair<std::string, Behaviour*> behaviour_pair : _behaviours) {
         delete behaviour_pair.second;
@@ -25,6 +31,10 @@ Game::~Game() {
 
     for (std::pair<std::string, Animation*> animation_pair : _animations) {
         delete animation_pair.second;
+    }
+
+    for (MotionObject* bullet : _bullets) {
+        delete bullet;
     }
 
 }
@@ -61,26 +71,46 @@ void Game::run_loop() {
 
 void Game::_process_input() {
     // Captura as entradas: mouse e teclado
+    _mouse_position = GetMousePosition();
+
+    _key_inputs.at("move-right") = IsKeyDown(MOVE_RIGHT_KEY);
+    _key_inputs.at("move-left") = IsKeyDown(MOVE_LEFT_KEY);
+    _key_inputs.at("fire") = IsKeyDown(FIRE_KEY);
 
 }
 
 void Game::_update_game() {
     // Altera o relógio das animações do jogo
+    float time = GetFrameTime();
     for (std::pair<std::string, Animation*> animation_pair : _animations) {
-        animation_pair.second->update(GetFrameTime());
+        animation_pair.second->update(time);
     }
- 
-    // Atualização da posição, velocidade e aceleração dos objetos cinemáticos
-    _motion_object->update();
+    
+    // Atualiza a posição das balas
+    for (MotionObject* bullet : _bullets) {
+        bullet->update(); 
+    }
+    // Atualização a nave do jogador
+    _ship->update(time);
 }
 
 void Game::_draw_game() {
     // Desenha todos os objetos do jogo
     BeginDrawing();
 
-    ClearBackground(WHITE);
+    ClearBackground(BLACK);
 
-    _motion_object->draw();
+     // Desenha o background com a textura especificada
+    Texture2D bg_texture = _textures.at("background");
+    DrawTexturePro(bg_texture, (Rectangle) {0, 0, (float) bg_texture.width, (float) bg_texture.height}, 
+    (Rectangle) {0, 0, (float) SCREEN_WIDTH, (float) SCREEN_HEIGHT}, 
+    Vector2Zero(), 0, WHITE);
+
+    for (MotionObject* bullet : _bullets) {
+        bullet->draw();
+    }
+
+    _ship->draw();
 
     EndDrawing();
 }
@@ -92,39 +122,42 @@ void Game::shutdown() {
 
 void inline Game::_build_objects() {
     // Objetos do jogo
-    Vector2 position = {SCREEN_WIDTH/2.0f, SCREEN_HEIGHT/2.0f}; // centro da tela
-    Vector2 velocity = {0.0f, 0.0f};
+    Vector2 velocity = {10.0f, 0.0f};
     Vector2 acceleration = {0.0f, 0.0f};
-    Vector2 dimension = {100.0f, 100.0f};
+    Vector2 dimension = {200.0f, 200.0f};
+    // Vector2 position = {SCREEN_WIDTH/2, SCREEN_HEIGHT - dimension.y/2.0f};
+    Vector2 position = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2.0f};
 
-    _motion_object = new MotionObject(position, velocity, acceleration, dimension);
-    _motion_object->add_behaviour(_behaviours.at("follow-mouse"));
-    _motion_object->add_animation(_animations["ship"]);
-    _motion_object->add_animation(_animations["alien"]);
-    _motion_object->add_animation(_animations["explosion"]);
+    _ship = new Ship(position, velocity, acceleration, dimension);
+    _ship->add_behaviour(_behaviours.at("default-ship"));
+    _ship->add_animation(_animations.at("ship"));
 }
 
 void inline Game::_load_animations() {
     // Animação do jogo
-    _animations["explosion"] = new AnimationFPS(&_textures.at("explosion"), Vector2 {5, 1}, 0.1f);
-    _animations["alien"] = new Animation(&_textures.at("alien"));
-    _animations["ship"] = new Animation(& _textures.at("ship"));
+    // _animations["explosion"] = new AnimationFPS(&_textures.at("explosion"), Vector2 {5, 1}, 0.1f);
+    _animations["alien"] = new AnimationFPS(&_textures.at("alien"), Vector2 {4, 4}, 0.2f);
+    _animations["ship"] = new AnimationFPS(& _textures.at("ship"), Vector2 {4, 3}, 0.2f);
+    _animations["bullet"] = new AnimationFPS(&_textures.at("bullet"), Vector2 {4, 3}, 0.2f);
 }
 
 void inline Game::_load_behaviours() {
     // Comportamentos do jogo
     _behaviours["follow-mouse"] = new FollowMouseBehaviour();
     _behaviours["default"] = new Behaviour();
+    _behaviours["default-ship"] = new DefaultShipBehaviour(&_key_inputs);
+    _behaviours["default-bullet"] = new DefaultBulletBehaviour();
 }
 
 void inline Game::_load_graphics() {
-// Armazena todas as texturas e os retângulos fontes cobrindo toda a imagem
+    // Armazena todas as texturas e os retângulos fontes cobrindo toda a imagem
     _textures["background"] = LoadTexture(BACKGROUND_TEXTURE);
+    // _textures["explosion"] = LoadTexture(EXPLOSION_TEXTURE);
+    // _textures["power-up"] = LoadTexture(POWERUP_TEXTURE);    
+
     _textures["ship"] = LoadTexture(SHIP_TEXTURE);
     _textures["alien"] = LoadTexture(ALIEN_TEXTURE);
-    _textures["bullet"] = LoadTexture(BULLET_TEXTURE);
-    _textures["explosion"] = LoadTexture(EXPLOSION_TEXTURE);
-    _textures["power-up"] = LoadTexture(POWERUP_TEXTURE);                       
+    _textures["bullet"] = LoadTexture(BULLET_TEXTURE);                   
 
 }
 
@@ -134,3 +167,19 @@ void inline Game::_unload_graphics() {
         UnloadTexture(tx_pair.second);
     }
 }
+
+void Game::add_bullet(MotionObject* bullet) {
+    _bullets.push_back(bullet);
+}
+
+Behaviour* Game::get_behaviour(std::string key) {
+    return _behaviours.at(key);
+}
+
+Animation* Game::get_animation(std::string key) {
+    return _animations.at(key);
+}
+
+ bool Game::get_inputs(std::string key){
+    return _key_inputs.at(key);
+ }

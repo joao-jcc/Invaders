@@ -1,15 +1,14 @@
-#ifndef MOTION_OBJECT_H
-#define MOTION_OBJECT_H
+#ifndef MOTION_OBJECT_HPP
+#define MOTION_OBJECT_HPP
+
 
 #include <raylib-cpp.hpp>
+#include <iostream>
 #include <vector>
 #include <iterator>
 #include <map>
 #include <string>
 
-#include "Game.hpp"
-#include "Behaviour.hpp"
-#include "Animation.hpp"
 
 class Game;
 class Behaviour;
@@ -20,7 +19,7 @@ class MotionObject {
         // Construtor padrão
         MotionObject();
 
-        // Construtor com especificação dos estado
+        // Construtor com especificação do estado
         MotionObject(Vector2 position, Vector2 velocity, Vector2 acceleration, Vector2 dimension);
 
         // Destrutor
@@ -46,6 +45,7 @@ class MotionObject {
         void set_game(Game* game);
 
     protected:
+        // Ponteiro para o jogo
         static Game* _game;
         // Posição, Velocidade, Aceleração e Dimensão
         std::map<std::string, Vector2> _parameters;

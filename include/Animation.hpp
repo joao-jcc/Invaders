@@ -1,12 +1,10 @@
 #ifndef ANIMATION_HPP
 #define ANIMATION_HPP
 
-#include <raylib-cpp.hpp>
-#include <string>
-#include <map>
-
+#include "Game.hpp"
 #include "MotionObject.hpp"
 
+class Game;
 class MotionObject;
 
 class Animation {
@@ -16,7 +14,7 @@ class Animation {
         ~Animation();
 
         void virtual draw(MotionObject* motion_object);
-        void virtual update(float delta_time); // interface
+        void virtual update(float delta_time);
     
     protected:
         // Textura

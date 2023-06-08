@@ -33,7 +33,7 @@ AnimationFPS::AnimationFPS() : Animation() {
 }
 
 AnimationFPS::AnimationFPS(Texture2D* texture, Vector2 tx_frame_dim, float frame_timer) : Animation(texture) {
-    _num_frames = tx_frame_dim.x + tx_frame_dim.y;
+    _num_frames = tx_frame_dim.x * tx_frame_dim.y;
     _tx_frame_dim = tx_frame_dim;
     _clock = 0.0f;
     _frame_timer = frame_timer;
