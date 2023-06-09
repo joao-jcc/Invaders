@@ -14,6 +14,7 @@
 #include "Animation.hpp"
 #include "MotionObject.hpp"
 #include "Ship.hpp"
+#include "Alien.hpp"
 
 class Animation;
 class Behaviour;
@@ -80,6 +81,7 @@ class Game {
         // Objetos do jogo
         Ship* _ship;
         std::list<MotionObject*> _bullets;
+        std::list<Alien*> _aliens;
 
         // Inputs
         std::map<std::string, bool> _key_inputs;

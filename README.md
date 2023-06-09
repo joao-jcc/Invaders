@@ -7,7 +7,7 @@
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/iuricode/README-template?style=for-the-badge)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/iuricode/README-template?style=for-the-badge)
 
-<img src="images/auxiliar/game.jpg" alt="Dois Kamikazes se aproximando da nave do jogador">
+<img src="images/auxiliar/game01.png" alt="Kamikazes se aproximando da nave do jogador">
 
 > Desenvolvimento de um jogo baseado no Invaders Clássico, utilizando-se a biblioteca gráfica Raylib.
 
@@ -19,6 +19,9 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [ ] Testes de unidade
 - [ ] Implementação do objeto bullet
 - [ ] Funções de colisão e destruição de objetos
+- [ ] Refatorar as classes de comportamento
+- [ ] Adicionar opção de jogo em FULL SCREEN
+- [ ] Implementar classe Fleet para refatorar Game::_build_objects()
 
 ## 💻 Pré-requisitos
 

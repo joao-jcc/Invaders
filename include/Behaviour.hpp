@@ -52,4 +52,25 @@ class DefaultBulletBehaviour : public Behaviour {
         
 };
 
+
+// KAMIKAZE_BEHAVIOUR
+class KamikazeBehaviour : public Behaviour {
+    // Comportamento de caça a um MotionObject objetivo/target
+    // A aceleração, velocidade são próprios do MotionObject
+    // Esse comportamento determina apenas a resistência do dinâmica, a velocidade máxima e a velocidade de parada
+    public:
+        KamikazeBehaviour(MotionObject* target_object);
+        ~KamikazeBehaviour();
+
+        void update(MotionObject* motion_object) override;
+    
+    private:
+        MotionObject* _target_object;
+        float _max_speed;
+        float _acceleration_factor;
+        float _threshold_speed;
+
+        
+};
+
 #endif

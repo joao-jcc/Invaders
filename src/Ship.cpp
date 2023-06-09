@@ -12,7 +12,7 @@ Ship::~Ship() {
 
 Ship::Ship(Vector2 position, Vector2 velocity, Vector2 acceleration, Vector2 ship_dimension) 
     : MotionObject(position, velocity, acceleration, ship_dimension) {
-        _total_charge = 0.5f; 
+        _total_charge = 0.2f; 
         _current_charge = 0.0f;
 }
 
@@ -42,7 +42,7 @@ bool Ship::is_charged() {
 void Ship::fire_bullet() {
     // Cria uma bala no topo da nave
     Vector2 bullet_position = Vector2Subtract(_parameters.at("position"), Vector2 {0, _parameters.at("dimension").y/2.0f});
-    MotionObject* bullet = new MotionObject(bullet_position, Vector2 {0, -10}, Vector2 {0, 0}, Vector2 {30, 50});
+    MotionObject* bullet = new MotionObject(bullet_position, Vector2 {0, -10}, Vector2 {0, 0}, Vector2 {20, 50});
 
     // Adiciona comportamento a bala
     bullet->add_behaviour(_game->get_behaviour("default-bullet"));
