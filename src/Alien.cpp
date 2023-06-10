@@ -15,3 +15,7 @@ Alien::Alien(Vector2 position, Vector2 velocity, Vector2 acceleration, Vector2 a
         // Alien padrão tem score igual a 10
         _score = 10u;
 }
+
+unsigned Alien::get_score() {
+    return _score;
+}

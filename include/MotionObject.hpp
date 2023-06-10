@@ -37,9 +37,12 @@ class MotionObject {
         // Adiciona animação para modificar a função draw
         void add_animation(Animation* animation);
 
-        // Getters e Setters para parâmtros de movimento e dimensão
+        // Getters e Setters para parâmetros de movimento e dimensão
         void set(std::string key, Vector2 value);
         Vector2 get(std::string key);
+
+        // Getter para o retângulo do MotionObject
+        Rectangle get_rectangle();
 
         // Setter para o ponteiro do jogo
         void set_game(Game* game);
@@ -47,8 +50,12 @@ class MotionObject {
     protected:
         // Ponteiro para o jogo
         static Game* _game;
+
         // Posição, Velocidade, Aceleração e Dimensão
         std::map<std::string, Vector2> _parameters;
+
+        // Representação retangular do objeto
+        Rectangle _rectangle;
 
         // Comportamentos do objeto
         std::vector<Behaviour*> _behaviours;
@@ -56,6 +63,8 @@ class MotionObject {
         // Animações do objeto
         std::vector<Animation*> _animations;
 
+        // Modifica a posição do retângulo
+        void _update_rectangle();
 };
 
 #endif

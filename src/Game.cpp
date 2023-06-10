@@ -16,6 +16,12 @@ Game::Game() {
     _bullets = std::list<MotionObject*>();
     _aliens = std::list<Alien*>();
 
+    // Score
+    _score = 0u;
+
+    // Game status
+    _game_status = true;
+
     // Ponteiro para o jogo para as instâncias MotionObject;
     MotionObject motion_object;
     motion_object.set_game(this);
@@ -62,11 +68,76 @@ void Game::initialize() {
     
 }
 
+void inline Game::_load_graphics() {
+    // Armazena todas as texturas e os retângulos fontes cobrindo toda a imagem
+    _textures["background"] = LoadTexture(BACKGROUND_TEXTURE);
+    // _textures["explosion"] = LoadTexture(EXPLOSION_TEXTURE);
+    // _textures["power-up"] = LoadTexture(POWERUP_TEXTURE);    
+
+    _textures["ship"] = LoadTexture(SHIP_TEXTURE);
+    _textures["alien"] = LoadTexture(ALIEN_TEXTURE);
+    _textures["bullet"] = LoadTexture(BULLET_TEXTURE);                   
+
+}
+
+void inline Game::_load_animations() {
+    // Animação do jogo
+    // _animations["explosion"] = new AnimationFPS(&_textures.at("explosion"), Vector2 {5, 1}, 0.1f);
+    _animations["alien"] = new AnimationFPS(&_textures.at("alien"), Vector2 {4, 4}, 0.2f);
+    _animations["ship"] = new AnimationFPS(& _textures.at("ship"), Vector2 {4, 3}, 0.2f);
+    _animations["bullet"] = new AnimationFPS(&_textures.at("bullet"), Vector2 {4, 3}, 0.2f);
+}
+
+void inline Game::_load_behaviours() {
+    // Comportamentos do jogo; 
+    // comportamentos kamikazes são criados durante a construção dos objetos
+    _behaviours["follow-mouse"] = new FollowMouseBehaviour();
+    _behaviours["default"] = new Behaviour();
+    _behaviours["default-ship"] = new DefaultShipBehaviour(&_key_inputs);
+    _behaviours["default-bullet"] = new DefaultBulletBehaviour();
+}
+
+void inline Game::_build_objects() {
+    // Todos os objetos serão construídos através de uma fleet.load(); fleet é uma classe a ser implementada
+    // Construindo a nave do jogador
+    Vector2 velocity = {10.0f, 0.0f};
+    Vector2 acceleration = {0.0f, 0.0f};
+    Vector2 dimension = {90.0f, 90.0f};
+    Vector2 position = {SCREEN_WIDTH/2, SCREEN_HEIGHT - dimension.y/2.0f};
+
+    // Configurando nave
+    _ship = new Ship(position, velocity, acceleration, dimension);
+
+    // Comportamento kamikaze com target: _ship
+    // faz sentido criar esses comportamentos à medida que os objetos são criados
+    _behaviours["kamikaze-to-ship"] = new KamikazeBehaviour(_ship);
+
+    // Adicionando comportamentos e animações
+    _ship->add_behaviour(_behaviours.at("default-ship"));
+    _ship->add_animation(_animations.at("ship"));
+    _build_aliens();
+   
+}
+
+ void Game::_build_aliens() {
+    // Construindo os aliens
+    _aliens.push_back(new Alien(Vector2 {50.0f, 30.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {80.0f, 80.0f}));
+    _aliens.push_back(new Alien(Vector2 {300.0f, 40.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {100.0f, 100.0f}));
+    _aliens.push_back(new Alien(Vector2 {500.0f, 50.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {110.0f, 110.0f}));
+    _aliens.push_back(new Alien(Vector2 {800.0f, 50.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {50.0f, 50.0f}));
+
+    for (Alien* alien : _aliens) {
+        alien->add_behaviour(_behaviours.at("kamikaze-to-ship"));
+        alien->add_animation(_animations.at("alien"));
+    }
+ }
+
+
 void Game::run_loop() {
     
     // Loop principal do jogo
  
-     while(!WindowShouldClose()) {
+     while(!WindowShouldClose() && _game_status) {
         _process_input();
         _update_game();
         _draw_game();
@@ -102,6 +173,99 @@ void Game::_update_game() {
   
     // Atualização a nave do jogador
     _ship->update(time);
+
+    // Checar colisões
+    _check_colisions();
+}
+
+void Game::_check_colisions() {
+    // Checa colisões de aliens contra tiro, nave ou limites da tela
+    Rectangle ship_rectangle = _ship->get_rectangle();
+    for (std::list<Alien*>::iterator it_a=_aliens.begin(); it_a!=_aliens.end();) {
+        
+        if ((*it_a)->get("position").y > SCREEN_HEIGHT) {
+            delete *it_a;
+            it_a = _aliens.erase(it_a);
+
+            continue;
+        }
+        
+        // Checar colisão entre os retângulos do jogador e do alien: resetar jogo
+        if (CheckCollisionRecs(ship_rectangle, (*it_a)->get_rectangle())) {
+            _reset_game();
+            return;
+        }
+
+        bool colision=false;
+        // Checar colisão entre os retângulos do alien com os retângulos das balas
+        for (std::list<MotionObject*>::iterator it_b=_bullets.begin(); it_b!=_bullets.end();) {
+             if (CheckCollisionRecs((*it_a)->get_rectangle(), (*it_b)->get_rectangle())) {
+                // Houve colisão
+                colision=true;
+                // Atualiza o score do jogo
+                _score += (*it_a)->get_score();
+                std::cout << TERMINAL_BOLDCYAN << "SCORE: " << _score << TERMINAL_RESET << std::endl;
+                // deleta o alien e a bala do HEAP e do estado do jogo
+                delete *it_a;
+                it_a = _aliens.erase(it_a);
+                delete *it_b;
+                it_b = _bullets.erase(it_b);
+
+                break;
+             }
+
+            // Bala atinge o topo da tela
+            if ((*it_b)->get("position").y < 0) {
+                delete (*it_b);
+                it_b = _bullets.erase(it_b);
+                continue;
+             }
+            
+            // Nenhuma colisão: passar para a próxima bala
+            ++it_b;
+        }
+
+        if (!colision) {
+            ++it_a;
+        }
+
+    }
+}
+
+void Game::_reset_game() {
+    // Diminui a vida da nave e checa game_over
+    if (_ship->kill_ship() == 0) {
+        _game_over();
+        return;
+    }
+    
+    // Reinicio a nave na posição bottom-center da tela
+    _ship->set("position", Vector2 {SCREEN_WIDTH/2, SCREEN_HEIGHT - _ship->get("dimension").y/2.0f});
+    
+    // Deletar todos dos objetos
+    // Remover as balas
+    for (MotionObject* bullet : _bullets) {
+        delete bullet;
+    }
+
+    _bullets.clear();
+ 
+    // Remover os aliens
+    for (Alien* alien : _aliens) {
+        delete alien;
+    }
+    _aliens.clear();
+
+    // Reconstruir os aliens
+    _build_aliens();
+    // Aguarde um segundo antes de desenhar a nova frota
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+}
+
+void Game::_game_over() {
+    std::cout << TERMINAL_BOLDRED << "FIM DE JOGO" << TERMINAL_RESET << std::endl;
+    _game_status = false;
 }
 
 void Game::_draw_game() {
@@ -137,66 +301,6 @@ void Game::shutdown() {
     CloseWindow();
 }
 
-void inline Game::_build_objects() {
-    // Todos os objetos serão construídos através de uma fleet.load(); fleet é uma classe a ser implementada
-    // Construindo a nave do jogador
-    Vector2 velocity = {10.0f, 0.0f};
-    Vector2 acceleration = {0.0f, 0.0f};
-    Vector2 dimension = {90.0f, 90.0f};
-    Vector2 position = {SCREEN_WIDTH/2, SCREEN_HEIGHT - dimension.y/2.0f};
-
-    // Configurando nave
-    _ship = new Ship(position, velocity, acceleration, dimension);
-
-    // Comportamento kamikaze com target: _ship
-    // faz sentido criar esses comportamentos à medida que os objetos são criados
-    _behaviours["kamikaze-to-ship"] = new KamikazeBehaviour(_ship);
-
-    // Adicionando comportamentos e animações
-    _ship->add_behaviour(_behaviours.at("default-ship"));
-    _ship->add_animation(_animations.at("ship"));
-    
-
-    // Construindo os aliens
-    _aliens.push_back(new Alien(Vector2 {50.0f, 30.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {80.0f, 80.0f}));
-    _aliens.push_back(new Alien(Vector2 {300.0f, 40.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {100.0f, 100.0f}));
-    _aliens.push_back(new Alien(Vector2 {500.0f, 50.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {110.0f, 110.0f}));
-    _aliens.push_back(new Alien(Vector2 {800.0f, 50.0f}, Vector2 {0.0f, 0.0f}, Vector2 {0.01f, 0.0f}, Vector2 {50.0f, 50.0f}));
-
-    for (Alien* alien : _aliens) {
-        alien->add_behaviour(_behaviours.at("kamikaze-to-ship"));
-        alien->add_animation(_animations.at("alien"));
-    }
-}
-
-void inline Game::_load_animations() {
-    // Animação do jogo
-    // _animations["explosion"] = new AnimationFPS(&_textures.at("explosion"), Vector2 {5, 1}, 0.1f);
-    _animations["alien"] = new AnimationFPS(&_textures.at("alien"), Vector2 {4, 4}, 0.2f);
-    _animations["ship"] = new AnimationFPS(& _textures.at("ship"), Vector2 {4, 3}, 0.2f);
-    _animations["bullet"] = new AnimationFPS(&_textures.at("bullet"), Vector2 {4, 3}, 0.2f);
-}
-
-void inline Game::_load_behaviours() {
-    // Comportamentos do jogo; 
-    // comportamentos kamikazes são criados durante a construção dos objetos
-    _behaviours["follow-mouse"] = new FollowMouseBehaviour();
-    _behaviours["default"] = new Behaviour();
-    _behaviours["default-ship"] = new DefaultShipBehaviour(&_key_inputs);
-    _behaviours["default-bullet"] = new DefaultBulletBehaviour();
-}
-
-void inline Game::_load_graphics() {
-    // Armazena todas as texturas e os retângulos fontes cobrindo toda a imagem
-    _textures["background"] = LoadTexture(BACKGROUND_TEXTURE);
-    // _textures["explosion"] = LoadTexture(EXPLOSION_TEXTURE);
-    // _textures["power-up"] = LoadTexture(POWERUP_TEXTURE);    
-
-    _textures["ship"] = LoadTexture(SHIP_TEXTURE);
-    _textures["alien"] = LoadTexture(ALIEN_TEXTURE);
-    _textures["bullet"] = LoadTexture(BULLET_TEXTURE);                   
-
-}
 
 void inline Game::_unload_graphics() {
      // Libera memória alocada para os gráficos/texturas
@@ -220,3 +324,4 @@ Animation* Game::get_animation(std::string key) {
  bool Game::get_inputs(std::string key){
     return _key_inputs.at(key);
  }
+

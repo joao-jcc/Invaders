@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <raylib-cpp.hpp>
+#include <thread>
 #include <map>
 #include <string>
 #include <iterator>
@@ -54,6 +55,9 @@ class Game {
         // Desenha o novo estado do jogo
         void _draw_game();
 
+        // Checar se houve colisões
+        void _check_colisions();
+
         // Carrega animações
         void inline _load_animations();
 
@@ -66,8 +70,17 @@ class Game {
         // Unload graphics
         void inline _unload_graphics();
 
-        // Constroi objetos do joho
+        // Constroi objetos do jogo
         void inline _build_objects();
+
+        // Constroi aliens do jogo
+        void inline _build_aliens();
+
+        // Reseta o jogo
+        void _reset_game();
+
+        // Finaliza o jogo
+        void _game_over();
 
         // Gráficos
         std::map<std::string, Texture2D> _textures;
@@ -86,6 +99,12 @@ class Game {
         // Inputs
         std::map<std::string, bool> _key_inputs;
         Vector2 _mouse_position;
+
+        // Score
+        unsigned _score;
+
+        // Game status
+        bool _game_status;
 };
 
 #endif

@@ -14,10 +14,11 @@ Ship::Ship(Vector2 position, Vector2 velocity, Vector2 acceleration, Vector2 shi
     : MotionObject(position, velocity, acceleration, ship_dimension) {
         _total_charge = 0.2f; 
         _current_charge = 0.0f;
+        _life = 3;
 }
 
 void Ship::update(float delta_time) {
-    // Atualização relativa a comportamentos: posição, velocidade, aceleração
+    // Atualização relativa a comportamentos: posição, velocidade, aceleração; e ao retângulo do objeto
     MotionObject::update();
 
     // Atualização relativa a carga da bala
@@ -52,4 +53,11 @@ void Ship::fire_bullet() {
     
     // Adicionae a bala so estado do jogo
     _game->add_bullet(bullet);
+}
+
+// Nave mata a si mesma:  estranho?? kill_ship deve ser um método de alien?
+int Ship::kill_ship() {
+    --_life;
+    std::cout << TERMINAL_BOLDRED << "VIDA: " << _life <<TERMINAL_RESET << std::endl;
+    return _life;
 }

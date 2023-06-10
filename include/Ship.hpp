@@ -18,11 +18,16 @@ class Ship : public MotionObject {
 
         // Dispara uma bala
         void fire_bullet();
+
+        // Diminui a vida da nave
+        int kill_ship();
     
     private:
         // Descrição da nave
         float _total_charge;
         float _current_charge; 
+
+        int _life;
  
 };
 

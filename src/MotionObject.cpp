@@ -19,6 +19,9 @@ MotionObject::MotionObject(Vector2 position, Vector2 velocity, Vector2 accelerat
     // Animações do objeto
     _animations = std::vector<Animation*>();
 
+    // Rectangle centralizado na posição do objeto e com as dimensões do objeto
+    _rectangle = {position.x - dimension.x/2.0f, position.y - dimension.y/2.0f, dimension.x, dimension.y};
+
 };
 
 MotionObject::~MotionObject() {
@@ -26,10 +29,20 @@ MotionObject::~MotionObject() {
 };
 
 void MotionObject::update() {
+    // Modifica a posição do objeto
     for (auto it = _behaviours.begin(); it != _behaviours.end(); it++) {
         (*it)->update(this);
     }
+
+    // Altera o retângulo do objeto com base na nova posição
+    _update_rectangle();
 };
+
+void MotionObject::_update_rectangle() {
+    Vector2 position = _parameters.at("position");
+    Vector2 dimension = _parameters.at("dimension");
+    _rectangle = {position.x - dimension.x/2.0f, position.y - dimension.y/2.0f, dimension.x, dimension.y};
+}
 
 void MotionObject::draw() {
      for (auto it = _animations.begin(); it != _animations.end(); it++) {
@@ -57,4 +70,8 @@ void MotionObject::set_game(Game* game) {
 
 Vector2 MotionObject::get(std::string key) {
     return _parameters.at(key);
+}
+
+Rectangle MotionObject::get_rectangle() {
+    return _rectangle;
 }
