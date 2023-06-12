@@ -55,7 +55,7 @@ class Game {
         // Desenha o novo estado do jogo
         void _draw_game();
 
-        // Checar se houve colisões
+        // Checa se houve colisões
         void _check_colisions();
 
         // Carrega animações
@@ -90,6 +90,9 @@ class Game {
 
         // Animação do jogo
         std::map<std::string, Animation*> _animations;
+
+        // Fonte do jogo
+        Font _font;
 
         // Objetos do jogo
         Ship* _ship;

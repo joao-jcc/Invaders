@@ -4,7 +4,10 @@ Game::Game() {
     // Inputs
     _key_inputs = { {"move-right", false}, {"move-left", false}, {"fire", false}};
     _mouse_position = Vector2 {};
-   
+
+    // Fonte Default
+    _font=GetFontDefault();
+
     // Textures
     _textures = std::map<std::string, Texture2D>();
     // Animações
@@ -54,6 +57,10 @@ void Game::initialize() {
     // Inicializa a janela do jogo e estabelece o FPS
     SetTargetFPS(FPS);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE);
+
+    // Carregando a fonte do jogo
+    _font = LoadFont(GAME_FONT);
+
     // Carregando todas as texturas do jogo
     _load_graphics();
 
@@ -71,8 +78,8 @@ void Game::initialize() {
 void inline Game::_load_graphics() {
     // Armazena todas as texturas e os retângulos fontes cobrindo toda a imagem
     _textures["background"] = LoadTexture(BACKGROUND_TEXTURE);
-    // _textures["explosion"] = LoadTexture(EXPLOSION_TEXTURE);
-    // _textures["power-up"] = LoadTexture(POWERUP_TEXTURE);    
+    _textures["explosion"] = LoadTexture(EXPLOSION_TEXTURE);
+    _textures["power-up"] = LoadTexture(POWERUP_TEXTURE);    
 
     _textures["ship"] = LoadTexture(SHIP_TEXTURE);
     _textures["alien"] = LoadTexture(ALIEN_TEXTURE);
@@ -82,7 +89,7 @@ void inline Game::_load_graphics() {
 
 void inline Game::_load_animations() {
     // Animação do jogo
-    // _animations["explosion"] = new AnimationFPS(&_textures.at("explosion"), Vector2 {5, 1}, 0.1f);
+    _animations["explosion"] = new AnimationFPS(&_textures.at("explosion"), Vector2 {5, 1}, 0.1f);
     _animations["alien"] = new AnimationFPS(&_textures.at("alien"), Vector2 {4, 4}, 0.2f);
     _animations["ship"] = new AnimationFPS(& _textures.at("ship"), Vector2 {4, 3}, 0.2f);
     _animations["bullet"] = new AnimationFPS(&_textures.at("bullet"), Vector2 {4, 3}, 0.2f);
@@ -90,7 +97,6 @@ void inline Game::_load_animations() {
 
 void inline Game::_load_behaviours() {
     // Comportamentos do jogo; 
-    // comportamentos kamikazes são criados durante a construção dos objetos
     _behaviours["follow-mouse"] = new FollowMouseBehaviour();
     _behaviours["default"] = new Behaviour();
     _behaviours["default-ship"] = new DefaultShipBehaviour(&_key_inputs);
@@ -156,17 +162,19 @@ void Game::_process_input() {
 }
 
 void Game::_update_game() {
-    // Altera o relógio das animações do jogo
     float time = GetFrameTime();
+
+    // Atualiza as animações do jogo
     for (std::pair<std::string, Animation*> animation_pair : _animations) {
         animation_pair.second->update(time);
     }
     
-    // Atualiza a posição das balas
+    // Atualiza as balas do jogo
     for (MotionObject* bullet : _bullets) {
         bullet->update(); 
     }
 
+    // Atualiza os aliens do jogo
     for (Alien* alien : _aliens) {
         alien->update();
     }
@@ -174,7 +182,7 @@ void Game::_update_game() {
     // Atualização a nave do jogador
     _ship->update(time);
 
-    // Checar colisões
+    // Checar colisões [pode ser uma função separa no run_loop]
     _check_colisions();
 }
 
@@ -280,6 +288,11 @@ void Game::_draw_game() {
     (Rectangle) {0, 0, (float) SCREEN_WIDTH, (float) SCREEN_HEIGHT}, 
     Vector2Zero(), 0, WHITE);
 
+    // Desenha o Score do jogo
+    // DrawText(std::to_string(_score).c_str(), 8, 8, SCORE_FONT_SIZE, SCORE_FONT_COLOR);
+    DrawTextEx(_font, std::to_string(_score).c_str(), Vector2 {8, 8}, SCORE_FONT_SIZE, 1.0f, SCORE_FONT_COLOR);
+
+
     // Desenha as balas com as animações associadas
     for (MotionObject* bullet : _bullets) {
         bullet->draw();
@@ -293,14 +306,15 @@ void Game::_draw_game() {
     // Desenha a nave com as animações associadas
     _ship->draw();
 
+
     EndDrawing();
 }
 
 void Game::shutdown() {
+    UnloadFont(_font);
     _unload_graphics();
     CloseWindow();
 }
-
 
 void inline Game::_unload_graphics() {
      // Libera memória alocada para os gráficos/texturas

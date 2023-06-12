@@ -10,6 +10,15 @@
     - Animation: classe base, desenha um frame único
     - AnimationFPS: classe derivada de Animation, desenha vários frames em taxa (FPS) especificada
 
+    As Animações são atualizadas no update_game separadamente dos objetos animados. Não é o caso de atualizar as animações ao atualizar os objetos, embora isso seja mais intuitivo, se fosse feito, uma mesma animações poderia ser atualizada mais de uma vez no mesma iteração.
+        Animation1 -> object1 object2 object3
+            game loop
+                object1.update()
+                object2.update()
+                object3.update()
+
+            Animation1 seria atualizada 3 vezes
+
 ## Dúvida
     1. Como modelar a explosão ?
         Trata-se de uma animação temporária ou um objeto temporário ?

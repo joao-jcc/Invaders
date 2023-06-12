@@ -16,3 +16,8 @@
 #define MOVE_RIGHT_KEY KEY_RIGHT
 #define MOVE_LEFT_KEY KEY_LEFT
 #define FIRE_KEY KEY_SPACE
+
+#define SCORE_FONT_SIZE 70
+#define SCORE_FONT_COLOR BLACK
+
+#define GAME_FONT "text/Herculanum.ttf"
