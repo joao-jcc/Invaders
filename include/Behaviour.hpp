@@ -73,4 +73,21 @@ class KamikazeBehaviour : public Behaviour {
         
 };
 
+// CIRCULAR_BEHAVIOUR
+
+class CircularBehaviour : public Behaviour {
+    public:
+        CircularBehaviour();
+        CircularBehaviour(Vector2 center);
+        ~CircularBehaviour();
+
+        void update(MotionObject* motion_object) override;
+    
+    private:
+        Vector2 _center;
+
+        float _centripetal_acc(float ray, float velocity);
+
+};
+
 #endif

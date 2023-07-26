@@ -125,3 +125,39 @@ void KamikazeBehaviour::update(MotionObject* motion_object) {
     motion_object->set("acceleration", Vector2Scale(acceleration, _acceleration_factor));
 
 }
+
+// CIRCULAR_BEHAVIOUR
+CircularBehaviour::CircularBehaviour() {
+
+}
+
+CircularBehaviour::CircularBehaviour(Vector2 center) : _center(center) {
+
+}
+
+CircularBehaviour::~CircularBehaviour() {
+
+}
+
+void CircularBehaviour::update(MotionObject* motion_object) {
+    Vector2 position = motion_object->get("position");
+    Vector2 velocity = motion_object->get("velocity");
+    Vector2 acceleration = motion_object->get("acceleration");
+    Vector2 ray = Vector2Subtract(_center, position);
+
+    float centripetal_acc = _centripetal_acc(Vector2Length(ray), Vector2Length(velocity));
+    acceleration = Vector2Scale(Vector2Normalize(ray), centripetal_acc);
+    Vector2 delta_v = Vector2Scale(acceleration, 1);
+
+    velocity = Vector2Add(velocity, delta_v);
+    position = Vector2Add(velocity, position);
+
+    motion_object->set("velocity", velocity);
+    motion_object->set("position", position);
+    motion_object->set("acceleration", acceleration);
+    
+}
+
+float CircularBehaviour::_centripetal_acc(float ray, float velocity) {
+    return pow(velocity, 2) / ray;
+}

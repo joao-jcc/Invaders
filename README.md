@@ -1,12 +1,4 @@
 # Invaders
-
-<!---Esses são exemplos. Veja https://shields.io para outras pessoas ou para personalizar este conjunto de escudos. Você pode querer incluir dependências, status do projeto e informações de licença aqui--->
-
-![GitHub repo size](https://img.shields.io/github/repo-size/iuricode/README-template?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/iuricode/README-template?style=for-the-badge)
-![Bitbucket open issues](https://img.shields.io/bitbucket/issues/iuricode/README-template?style=for-the-badge)
-![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/iuricode/README-template?style=for-the-badge)
-
 <img src="images/auxiliar/game01.png" alt="Kamikazes se aproximando da nave do jogador">
 
 > Desenvolvimento de um jogo baseado no Invaders Clássico, utilizando-se a biblioteca gráfica Raylib.
@@ -26,8 +18,8 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 ## 💻 Pré-requisitos
 
 Antes de começar, verifique se você atendeu aos seguintes requisitos:
-* Compilador `g++`, para Windowns é recomendado o `mingw32`
-* O jogo é compatível com versões recentes de `<Windows / Linux / MacOS>`
+* Compilador `g++`
+* O jogo é compatível com versões recentes de `<Linux / MacOS>`
 
 
 ## 🚀 Instalando e rodando o Invaders
@@ -42,11 +34,6 @@ Clonagem do Repositório:
 Linux e macOS:
 ```
     make
-```
-
-Windows:
-```
-    mingw32-make
 ```
 
 ## 📖 User Stories
@@ -88,46 +75,6 @@ Como jogador, quero uma Fleet que seja um vetor de aliens, permitindo definir a 
 Como jogador, quero que uma Texture defina as imagens de todos os objetos do jogo, facilitando a identificação visual dos elementos do jogo.
 
 
-
-## 🤝 Colaboradores
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/joao-jcc">João Costa</a></b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/luccaamp">Lucca Alvarenga</a></b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/lucaspedras8">Lucas Pedras</a></b>
-        </sub>
-      </a>
-    </td>
-     <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/LrcSantos">Lucas Santos</a></b>
-        </sub>
-      </a>
-    </td>
-     <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/Fissicaro">Arthur Fissicaro</a></b>
-        </sub>
-      </a>
-    </td>
-  </tr>
-</table>
+<hr/>
+<b>Desenvolvedor: </b>  <b><a href="https://github.com/joao-jcc">João Costa</a></b></sub>
 

@@ -20,4 +20,4 @@
 #define SCORE_FONT_SIZE 70
 #define SCORE_FONT_COLOR BLACK
 
-#define GAME_FONT "text/Herculanum.ttf"
+#define GAME_FONT "default"
